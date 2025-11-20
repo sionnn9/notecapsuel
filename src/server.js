@@ -7,6 +7,9 @@ import { connectDB } from "./config/db.js";
 const app = express();
 const PORT = process.env.Port || 5001;
 connectDB();
+
+app.use(express.json());
+
 app.use("/api/notes", notesRoutes);
 
 app.listen(PORT, () => {
