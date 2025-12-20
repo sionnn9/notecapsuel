@@ -1,16 +1,24 @@
 import express from "express";
 import dotenv from "dotenv";
-dotenv.config();
+import cors from "cors";
+
 import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
 
+dotenv.config();
 const app = express();
 const PORT = process.env.Port || 5001;
 
 //middleware
+// this should be before app.use(express.json()) to handle preflight requests because of CORS
+app.use(
+  cors({
+    origin: "http://localhost:3000", // frontend url port
+    credentials: true, // allow cookies to be sent
+  })
+);
 app.use(express.json());
-
 app.use(rateLimiter);
 
 app.use((req, res, next) => {

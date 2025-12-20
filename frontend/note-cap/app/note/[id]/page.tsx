@@ -4,16 +4,37 @@ import React, { use } from "react";
 import Navabar from "@/app/component/navbar/page";
 import Ratelimit from "@/app/component/ratelimit/page";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const page = () => {
   const [Isratelimited, setIsratelimited] = React.useState(false);
+  const [notes, setNotes] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
   const router = useRouter();
 
   React.useEffect(() => {
-    if (Isratelimited) {
-      router.push("/component/ratelimit");
-    }
-  }, [Isratelimited, router]);
+    const fetchNotes = async () => {
+      try {
+        const res = await axios.get("http://localhost:5001/api/notes");
+        console.log(res.data);
+        setNotes(res.data);
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 429) {
+            router.push("/component/ratelimit");
+            return;
+          }
+        } else {
+          console.error("Error fetching notes:", error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotes();
+  }, []); // ✅ RUN ONCE
+
   return (
     <div className="bg-black min-h-screen w-screen">
       <Navabar />
