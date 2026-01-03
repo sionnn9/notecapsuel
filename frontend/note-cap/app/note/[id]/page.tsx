@@ -5,6 +5,9 @@ import Navabar from "@/app/component/navbar/page";
 import Ratelimit from "@/app/component/ratelimit/page";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
+import { formatDate } from "@/app/lib/utils";
 
 const page = () => {
   const [Isratelimited, setIsratelimited] = React.useState(false);
@@ -33,29 +36,44 @@ const page = () => {
     };
 
     fetchNotes();
-  }, []); // ✅ RUN ONCE
+  }, []); //  RUN ONCE
 
   return (
     <div className="bg-black min-h-screen w-screen">
       <Navabar />
 
-      <section className=" mt-16 ">
-        <div className="flex justify-center items-center">
-          <div className="rounded-xl w-96 bg-red-500 h-auto m-7 text-start px-5 border-t-[7px] border-blue-900 ">
-            <span className="text-white font-bold text-lg mt-4 block">
-              Headding msg
-            </span>
-            <p className="text-white my-4">
-              SQL (Structured Query Language) is a standard language for
-              managing and manipulating relational databases.
-            </p>
+      {loading && (
+        <div className="text-white text-center mt-10">Loading...</div>
+      )}
 
-            <span className="text-white text-sm mb-2 block">
-              date:16-12-2005
-            </span>
-          </div>
+      {notes.length > 0 && !Isratelimited && (
+        <div>
+          <section className=" mt-16 flex justify-evenly flex-wrap">
+            {notes.map((note: any) => (
+              <div className="flex justify-center items-center">
+                <div className="rounded-xl w-96 bg-red-500 h-auto m-7 text-start px-5 border-t-[7px] border-blue-900 ">
+                  <span className="text-white font-bold text-lg mt-4 block">
+                    {note.title}
+                  </span>
+                  <p className="text-white my-4">{note.content}</p>
+                  <span className="text-white text-sm mb-2 block">
+                    {formatDate(note.createdAt)}
+                  </span>
+                  <div className="flex justify-end text-xl mb-4 gap-2">
+                    <span className="cursor-pointer hover:text-gray-300 ">
+                      <FaEdit />
+                    </span>
+                    <span className="cursor-pointer hover:text-gray-300 text-red-300">
+                      {" "}
+                      <FaRegTrashAlt />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </section>
         </div>
-      </section>
+      )}
     </div>
   );
 };
