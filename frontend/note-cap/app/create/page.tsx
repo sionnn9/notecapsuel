@@ -30,9 +30,22 @@ const page = () => {
       toast.success("Note created successfully!");
       router.push("/note/[id]");
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 429) {
+          toast.error(
+            "Slow down! You are creating notes too quickly. Please wait a moment.",
+            {
+              duration: 4000,
+              icon: "⚠️",
+            }
+          );
+        } else {
+          console.error("Error creating note:", error);
+          toast.error("Failed to create note. Please try again.");
+        }
+      }
+    } finally {
       setLoading(false);
-      console.error("Error creating note:", error);
-      toast.error("Failed to create note. Please try again.");
     }
   };
 

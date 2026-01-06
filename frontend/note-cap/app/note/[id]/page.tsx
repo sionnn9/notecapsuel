@@ -51,7 +51,7 @@ const page = () => {
           <section className=" mt-16 flex justify-evenly flex-wrap">
             {notes.map((note: any) => (
               <div className="flex justify-center items-center">
-                <div className="rounded-xl w-96 bg-red-500 h-auto m-7 text-start px-5 border-t-[7px] border-blue-900 ">
+                <div className="rounded-xl w-96 bg-red-500 h-auto m-7 text-start px-5 border-t-[7px] border-blue-900 hover:scale-105 duration-300 ease-in-out">
                   <span className="text-white font-bold text-lg mt-4 block">
                     {note.title}
                   </span>
