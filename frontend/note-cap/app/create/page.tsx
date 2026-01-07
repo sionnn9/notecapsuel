@@ -6,7 +6,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
+import instance from "@/app/lib/axios";
 const page = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -23,7 +23,7 @@ const page = () => {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:5001/api/notes", {
+      await instance.post("/notes", {
         title,
         content,
       });

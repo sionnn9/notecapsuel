@@ -8,6 +8,7 @@ import axios from "axios";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { formatDate } from "@/app/lib/utils";
+import instance from "@/app/lib/axios";
 
 const page = () => {
   const [Isratelimited, setIsratelimited] = React.useState(false);
@@ -18,7 +19,7 @@ const page = () => {
   React.useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/notes");
+        const res = await instance.get("/notes");
         console.log(res.data);
         setNotes(res.data);
       } catch (error: unknown) {
