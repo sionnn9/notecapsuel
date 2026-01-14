@@ -54,7 +54,6 @@ const page = () => {
       <div className="container mx-auto my-3">
         <div className="max-w-2xl mx-auto">
           <Link
-            //this href needs fixing
             href={`/note/$[id]`}
             className="text-blue-500 hover:text-blue-700 rounded-2xl hover:bg-gray-800 p-3"
           >

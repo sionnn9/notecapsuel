@@ -82,10 +82,10 @@ const Page = () => {
       {!loading && notes.length === 0 && (
         <div
           className="
-  text-white text-lg text-center mt-10
-  animate-bounce
-  drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]
-"
+                text-white text-lg text-center mt-10
+                animate-bounce
+                drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]
+                    "
         >
           No Notes Found. Kindly Enter a Note.
         </div>
