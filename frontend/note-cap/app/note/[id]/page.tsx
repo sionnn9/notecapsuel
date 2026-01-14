@@ -76,19 +76,29 @@ const Page = () => {
       <Navabar />
 
       {loading && (
-        <div className="text-white text-center mt-10">Loading...</div>
+        <div className="text-white text-lg text-center mt-10">Loading...</div>
       )}
 
       {!loading && notes.length === 0 && (
-        <div className="text-white text-center mt-10">No notes found</div>
+        <div
+          className="
+  text-white text-lg text-center mt-10
+  animate-bounce
+  drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]
+"
+        >
+          No Notes Found. Kindly Enter a Note.
+        </div>
       )}
 
       {!loading && notes.length > 0 && !isRateLimited && (
         <section className="mt-16 flex justify-evenly flex-wrap">
           {notes.map((note) => (
-            /* ✅ 3. Link per note (correct) */
-            //<Link key={note.id} href={`/note/${note.id}`}>
-            <div className="flex justify-center items-center cursor-pointer">
+            <div
+              key={note._id}
+              onClick={() => router.push(`/create/${note._id}`)}
+              className="flex justify-center items-center cursor-pointer"
+            >
               <div className="rounded-xl w-96 bg-red-500 h-auto m-7 text-start px-5 border-t-[7px] border-blue-900 hover:scale-105 duration-300 ease-in-out">
                 <span className="text-white font-bold text-lg mt-4 block">
                   {note.title}
@@ -101,7 +111,10 @@ const Page = () => {
                 </span>
 
                 <div className="flex justify-end text-xl mb-4 gap-3">
-                  <FaEdit className="cursor-pointer hover:text-gray-300" />
+                  <FaEdit
+                    onClick={(e) => e.stopPropagation()}
+                    className="cursor-pointer hover:text-gray-300"
+                  />
 
                   <FaRegTrashAlt
                     onClick={(e) => {
@@ -109,13 +122,11 @@ const Page = () => {
                       setDeleteId(note._id);
                       setOpen(true);
                     }}
-                    className="text-red-950 hover:text-rose-50 hover:animate-pulse
-                    cursor-pointer"
+                    className="text-red-950 hover:text-rose-50 hover:animate-pulse cursor-pointer"
                   />
                 </div>
               </div>
             </div>
-            //</Link>
           ))}
         </section>
       )}
