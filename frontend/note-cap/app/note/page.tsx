@@ -96,7 +96,7 @@ const Page = () => {
           {notes.map((note) => (
             <div
               key={note._id}
-              onClick={() => router.push(`/create/${note._id}`)}
+              onClick={() => router.push(`/noteDetail/${note._id}`)}
               className="flex justify-center items-center cursor-pointer"
             >
               <div className="rounded-xl w-96 bg-red-500 h-auto m-7 text-start px-5 border-t-[7px] border-blue-900 hover:scale-105 duration-300 ease-in-out">

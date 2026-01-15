@@ -28,7 +28,7 @@ const page = () => {
         content,
       });
       toast.success("Note created successfully!");
-      router.push("/note/[id]");
+      router.push("/note");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 429) {
@@ -54,7 +54,7 @@ const page = () => {
       <div className="container mx-auto my-3">
         <div className="max-w-2xl mx-auto">
           <Link
-            href={`/note/$[id]`}
+            href={`/note`}
             className="text-blue-500 hover:text-blue-700 rounded-2xl hover:bg-gray-800 p-3"
           >
             {"<-- Back to Notes"}
