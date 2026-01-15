@@ -10,19 +10,24 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 import instance from "@/app/lib/axios";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { Deletepop } from "@/app/component/deletepop/page";
 type NoteInput = {
+  _id: string;
   title: string;
   content: string;
 };
 
 const page = () => {
   const [note, setNote] = useState<NoteInput>({
+    _id: "",
     title: "",
     content: "",
   });
 
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [deleteId, setDeleteId] = React.useState<string | null>(null);
+
   const router = useRouter();
 
   const { id } = useParams();
@@ -37,11 +42,31 @@ const page = () => {
         const timer = setTimeout(() => {
           setLoading(false);
         }, 750);
+        return () => clearTimeout(timer);
       }
     };
 
     fetchNote();
   }, [id]);
+
+  const handleDelete = async () => {
+    if (!deleteId) return;
+
+    try {
+      await instance.delete(`/notes/${deleteId}`);
+
+      toast.success("Note deleted successfully");
+      const timee = setTimeout(() => {
+        router.push("/note");
+      }, 1000);
+    } catch (error) {
+      console.error("Error deleting note:", error);
+      toast.error("Failed to delete note");
+    } finally {
+      setOpen(false);
+      setDeleteId(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -62,12 +87,16 @@ const page = () => {
               {"<-- Back to Notes"}
             </Link>
 
-            <Link
-              href={`/note`}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setDeleteId(note._id);
+                setOpen(true);
+              }}
               className="text-red-500 flex  hover:text-red-700 rounded-2xl hover:bg-rose-400 p-3"
             >
               <FaRegTrashAlt className="m-1 " /> Delete Note
-            </Link>
+            </button>
           </div>
           <div className="card bg-gray-900 p-6 rounded-xl shadow-lg mt-6">
             <div className="card-body ">
@@ -119,6 +148,7 @@ const page = () => {
           </div>
         </div>
       </div>
+      <Deletepop open={open} setOpen={setOpen} handleDelete={handleDelete} />
     </div>
   );
 };
