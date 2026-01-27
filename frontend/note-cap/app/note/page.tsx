@@ -58,7 +58,7 @@ const Page = () => {
       await instance.delete(`/notes/${deleteId}`);
 
       setNotes((prevNotes) =>
-        prevNotes.filter((note: any) => note._id !== deleteId)
+        prevNotes.filter((note: any) => note._id !== deleteId),
       );
 
       toast.success("Note deleted successfully");
@@ -99,7 +99,7 @@ const Page = () => {
               onClick={() => router.push(`/noteDetail/${note._id}`)}
               className="flex justify-center items-center cursor-pointer"
             >
-              <div className="rounded-xl w-96 bg-red-500 h-auto m-7 text-start px-5 border-t-[7px] border-blue-900 hover:scale-105 duration-300 ease-in-out">
+              <div className="rounded-xl w-72 sm:w-96 bg-red-500 h-auto m-7 text-start px-5 border-t-[7px] border-blue-900 hover:scale-105 duration-300 ease-in-out">
                 <span className="text-white font-bold text-lg mt-4 block">
                   {note.title}
                 </span>

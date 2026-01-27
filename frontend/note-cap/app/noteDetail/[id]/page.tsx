@@ -68,6 +68,17 @@ const page = () => {
     }
   };
 
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!note.title.trim() || !note.content.trim()) {
+      setLoading(false);
+      toast.error(
+        "Title and content cannot be empty Kindly enter the details.",
+      );
+      return;
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -131,6 +142,7 @@ const page = () => {
                 <div className="justify-end flex py-1.5">
                   <button
                     type="submit"
+                    onClick={handleSave}
                     disabled={loading}
                     className={`font-bold py-2 px-4 rounded-xl text-white transition 
                           ${
