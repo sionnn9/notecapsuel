@@ -27,10 +27,12 @@ const page = () => {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
+  const [saving, setSaving] = React.useState(false);
 
   const router = useRouter();
 
-  const { id } = useParams();
+  const { id } = useParams(); //gets tthe id from the url
+
   useEffect(() => {
     const fetchNote = async () => {
       try {
@@ -76,6 +78,19 @@ const page = () => {
         "Title and content cannot be empty Kindly enter the details.",
       );
       return;
+    }
+
+    setSaving(true);
+
+    try {
+      await instance.put(`/notes/${id}`, note);
+      toast.success("Note updated successfully");
+      router.push("/note");
+    } catch (error) {
+      toast.error("Failed to update note. Please try again.");
+      console.error("Error updating note:", error);
+    } finally {
+      setSaving(false);
     }
   };
 
