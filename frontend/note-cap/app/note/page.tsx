@@ -7,10 +7,9 @@ import axios from "axios";
 import { FaRegTrashAlt, FaEdit } from "react-icons/fa";
 import { formatDate } from "@/app/lib/utils";
 import instance from "@/app/lib/axios";
-import Link from "next/link";
 import toast from "react-hot-toast";
 import { Deletepop } from "@/app/component/deletepop/page";
-/* ✅ 1. Define Note type */
+
 type Note = {
   _id: string;
   title: string;
@@ -39,8 +38,6 @@ const Page = () => {
             router.push("/component/ratelimit");
             return;
           }
-        } else {
-          console.error("Error fetching notes:", error);
         }
       } finally {
         setLoading(false);
@@ -50,20 +47,14 @@ const Page = () => {
     fetchNotes();
   }, [router]);
 
-  /* ✅ 2. Typed delete handler */
   const handleDelete = async () => {
     if (!deleteId) return;
 
     try {
       await instance.delete(`/notes/${deleteId}`);
-
-      setNotes((prevNotes) =>
-        prevNotes.filter((note: any) => note._id !== deleteId),
-      );
-
+      setNotes((prev) => prev.filter((n) => n._id !== deleteId));
       toast.success("Note deleted successfully");
-    } catch (error) {
-      console.error("Error deleting note:", error);
+    } catch {
       toast.error("Failed to delete note");
     } finally {
       setOpen(false);
@@ -72,58 +63,82 @@ const Page = () => {
   };
 
   return (
-    <div className="bg-black min-h-screen w-screen">
+    <div className="relative min-h-screen text-gray-100 overflow-hidden pt-16">
+      {/* 🌌 Radial Gradient Background */}
+      <div
+        className="absolute inset-0 -z-10 h-full w-full px-5 py-24
+        [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"
+      />
+
       <Navabar />
 
+      {/* Loading */}
       {loading && (
-        <div className="text-white text-lg text-center mt-10">Loading...</div>
-      )}
-
-      {!loading && notes.length === 0 && (
-        <div
-          className="
-                text-white text-lg text-center mt-10
-                animate-bounce
-                drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]
-                    "
-        >
-          No Notes Found. Kindly Enter a Note.
+        <div className="flex justify-center mt-24">
+          <span className="text-gray-400 animate-pulse">Loading notes…</span>
         </div>
       )}
 
+      {/* Empty State */}
+      {!loading && notes.length === 0 && (
+        <div className="flex flex-col items-center mt-32 text-center">
+          <p className="text-xl font-semibold text-gray-300">No notes yet</p>
+          <p className="text-gray-500 mt-2">
+            Create your first note to get started ✨
+          </p>
+        </div>
+      )}
+
+      {/* Notes Grid */}
       {!loading && notes.length > 0 && !isRateLimited && (
-        <section className="mt-16 flex justify-evenly flex-wrap">
+        <section className="max-w-7xl mx-auto px-6 py-16 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {notes.map((note) => (
             <div
               key={note._id}
               onClick={() => router.push(`/noteDetail/${note._id}`)}
-              className="flex justify-center items-center cursor-pointer"
+              className="group cursor-pointer"
             >
-              <div className="rounded-xl w-72 sm:w-96 bg-red-500 h-auto m-7 text-start px-5 border-t-[7px] border-blue-900 hover:scale-105 duration-300 ease-in-out">
-                <span className="text-white font-bold text-lg mt-4 block">
+              <div
+                className="
+                relative h-full rounded-3xl
+                bg-white/5 backdrop-blur-xl
+                border border-white/10
+                p-6
+                transition-all duration-300
+                hover:-translate-y-1
+                hover:shadow-[0_20px_40px_rgba(99,102,241,0.25)]
+                "
+              >
+                {/* Title */}
+                <h3 className="text-lg font-bold text-white line-clamp-1">
                   {note.title}
-                </span>
+                </h3>
 
-                <p className="text-white my-4">{note.content}</p>
+                {/* Content Preview */}
+                <p className="text-gray-200 mt-3 text-sm line-clamp-3 leading-relaxed">
+                  {note.content}
+                </p>
 
-                <span className="text-white text-sm mb-2 block">
-                  {formatDate(note.createdAt)}
-                </span>
+                {/* Footer */}
+                <div className="flex items-center justify-between mt-6">
+                  <span className="text-xs text-gray-400">
+                    {formatDate(note.createdAt)}
+                  </span>
 
-                <div className="flex justify-end text-xl mb-4 gap-3">
-                  <FaEdit
-                    onClick={(e) => e.stopPropagation()}
-                    className="cursor-pointer hover:text-gray-300"
-                  />
-
-                  <FaRegTrashAlt
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDeleteId(note._id);
-                      setOpen(true);
-                    }}
-                    className="text-red-950 hover:text-rose-50 hover:animate-pulse cursor-pointer"
-                  />
+                  <div className="flex gap-3 text-lg opacity-0 group-hover:opacity-100 transition">
+                    <FaEdit
+                      onClick={(e) => e.stopPropagation()}
+                      className="hover:text-blue-400 transition"
+                    />
+                    <FaRegTrashAlt
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleteId(note._id);
+                        setOpen(true);
+                      }}
+                      className="hover:text-rose-400 transition"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
