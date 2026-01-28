@@ -1,0 +1,21 @@
+{
+  "name": "notecapsuel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix frontend/note-cap && npm install --prefix backend && npm run build --prefix frontend/note-cap "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sionnn9/notecapsuel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sionnn9/notecapsuel/issues"
+  },
+  "homepage": "https://github.com/sionnn9/notecapsuel#readme"
+}

@@ -8,7 +8,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaRegTrashAlt, FaChevronLeft, FaSave } from "react-icons/fa";
 
 import instance from "@/app/lib/axios";
-import { Deletepop } from "@/app/component/deletepop/page";
+import Deletepop from "@/app/component/deletepop/page";
 
 type NoteInput = {
   _id: string;

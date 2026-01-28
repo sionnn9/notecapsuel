@@ -8,7 +8,7 @@ import { FaRegTrashAlt, FaEdit } from "react-icons/fa";
 import { formatDate } from "@/app/lib/utils";
 import instance from "@/app/lib/axios";
 import toast from "react-hot-toast";
-import { Deletepop } from "@/app/component/deletepop/page";
+import Deletepop from "@/app/component/deletepop/page";
 
 type Note = {
   _id: string;

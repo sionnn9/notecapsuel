@@ -1,3 +1,4 @@
+import React from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,7 +12,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-export function Deletepop({ open, setOpen, handleDelete }: any) {
+interface DeletePopProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  handleDelete: () => void;
+}
+
+const DeletePop: React.FC<DeletePopProps> = ({
+  open,
+  setOpen,
+  handleDelete,
+}) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
@@ -37,4 +48,6 @@ export function Deletepop({ open, setOpen, handleDelete }: any) {
       </AlertDialogContent>
     </AlertDialog>
   );
-}
+};
+
+export default DeletePop;
