@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -13,7 +13,13 @@ const Page = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pageloading, setPageloading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setPageloading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handlesubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +49,13 @@ const Page = () => {
       setLoading(false);
     }
   };
-
+  if (pageloading) {
+    return (
+      <div className="h-screen bg-black flex items-center justify-center">
+        <AiOutlineLoading3Quarters className="animate-spin text-4xl text-blue-500" />
+      </div>
+    );
+  }
   return (
     <div className="relative min-h-screen text-gray-100 overflow-hidden pt-10">
       {/* 🌌 Radial Gradient Background */}

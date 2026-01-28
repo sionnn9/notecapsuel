@@ -39,7 +39,7 @@ const Page = () => {
       } catch {
         toast.error("Failed to fetch note.");
       } finally {
-        setTimeout(() => setLoading(false), 600);
+        setTimeout(() => setLoading(false), 500);
       }
     };
     fetchNote();
@@ -80,26 +80,27 @@ const Page = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="h-screen bg-black flex items-center justify-center">
         <AiOutlineLoading3Quarters className="animate-spin text-4xl text-blue-500" />
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen text-gray-100 overflow-hidden">
-      {/* 🌌 RADIAL GRADIENT BACKGROUND */}
+    <div className="relative h-screen text-gray-100 overflow-hidden">
+      {/* Background */}
       <div
-        className="absolute inset-0 -z-10 h-full w-full px-5 py-24
+        className="absolute inset-0 -z-10
         [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"
       />
 
-      <div className="max-w-3xl mx-auto px-4 pt-20 pb-4">
+      <div className="max-w-3xl mx-auto h-full px-4 py-6 flex flex-col">
         {/* Top Bar */}
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex items-center justify-between mb-4">
           <Link
             href="/note"
-            className="flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-white transition bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:bg-white/10"
+            className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition
+            bg-white/5 px-4 py-2 rounded-full border border-white/10"
           >
             <FaChevronLeft className="text-xs" />
             Back
@@ -110,7 +111,9 @@ const Page = () => {
               setDeleteId(note._id);
               setOpen(true);
             }}
-            className="flex items-center gap-2 text-sm font-semibold text-rose-400 hover:text-white transition-all bg-rose-500/10 px-4 py-2 rounded-full border border-rose-500/20 hover:bg-rose-500/30"
+            className="flex items-center gap-2 text-sm font-semibold text-rose-400
+            bg-rose-500/10 px-4 py-2 rounded-full border border-rose-500/20
+            hover:bg-rose-500/30 transition"
           >
             <FaRegTrashAlt />
             Delete
@@ -118,38 +121,40 @@ const Page = () => {
         </div>
 
         {/* Editor Card */}
-        <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
-          <div className="p-6 space-y-6">
+        <div
+          className="flex-1 bg-white/5 backdrop-blur-2xl border border-white/10
+        rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] flex flex-col"
+        >
+          <div className="p-6 flex flex-col flex-1 gap-4">
             {/* Header */}
             <div>
-              <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-extrabold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
                 Edit Note
               </h1>
-              <p className="text-gray-400 mt-2 text-sm">
+              <p className="text-gray-400 text-sm">
                 Polish your thoughts. Save when ready.
               </p>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSave} className="space">
+            <form onSubmit={handleSave} className="flex flex-col flex-1 gap-4">
               {/* Title */}
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+              <div>
+                <label className="text-xs font-semibold uppercase text-gray-500">
                   Title
                 </label>
                 <input
                   type="text"
                   value={note.title}
                   onChange={(e) => setNote({ ...note, title: e.target.value })}
-                  placeholder="A powerful title…"
-                  className="mb-2 w-full rounded-2xl bg-black/40 border border-white/10 px-6 py-4 text-lg
-                  placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 transition"
+                  className="mt-1 w-full rounded-xl bg-black/40 border border-white/10
+                  px-5 py-3 text-lg focus:ring-2 focus:ring-blue-500/40 outline-none"
                 />
               </div>
 
-              {/* Content */}
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+              {/* Content (auto grows) */}
+              <div className="flex flex-col flex-1 min-h-0">
+                <label className="text-xs font-semibold uppercase text-gray-500 mb-1">
                   Content
                 </label>
                 <textarea
@@ -157,26 +162,25 @@ const Page = () => {
                   onChange={(e) =>
                     setNote({ ...note, content: e.target.value })
                   }
-                  placeholder="Write freely…"
-                  className="w-full min-h-[260px] rounded-2xl bg-black/40 border border-white/10 px-6 py-4
-                  text-base leading-relaxed placeholder:text-gray-600 resize-none
-                  focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 transition"
+                  className="flex-1 min-h-0 rounded-xl bg-black/40 border border-white/10
+                  px-5 py-4 resize-none focus:ring-2 focus:ring-blue-500/40 outline-none"
                 />
               </div>
 
-              {/* Save Button */}
-              <div className="flex justify-end pt-7">
+              {/* Save */}
+              <div className="flex justify-end">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="group flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600
-                  hover:from-blue-500 hover:to-indigo-500 px-10 py-4 rounded-2xl font-bold
-                  transition-all active:scale-95 disabled:opacity-50 shadow-[0_0_30px_rgba(99,102,241,0.4)]"
+                  className="flex items-center gap-3 px-8 py-3 rounded-xl font-bold
+                  bg-gradient-to-r from-blue-600 to-indigo-600
+                  hover:from-blue-500 hover:to-indigo-500
+                  transition-all active:scale-95 disabled:opacity-50"
                 >
                   {saving ? (
                     <AiOutlineLoading3Quarters className="animate-spin" />
                   ) : (
-                    <FaSave className="group-hover:rotate-12 transition-transform" />
+                    <FaSave />
                   )}
                   {saving ? "Saving…" : "Update Note"}
                 </button>
