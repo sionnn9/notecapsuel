@@ -4,11 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "lint": "eslint",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.15",
