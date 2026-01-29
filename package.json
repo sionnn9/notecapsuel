@@ -1,21 +1,20 @@
 {
   "name": "notecapsuel",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "build": "npm install --prefix frontend/note-cap && npm install --prefix backend && npm run build --prefix frontend/note-cap "
+    "install-all": "npm install --prefix frontend/note-cap && npm install --prefix backend",
+    "build": "npm run build --prefix frontend/note-cap",
+    "start-backend": "npm run start --prefix backend",
+    "start-frontend": "npm run start --prefix frontend/note-cap",
+    "start": "concurrently \"npm run start-backend\" \"npm run start-frontend\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sionnn9/notecapsuel.git"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/sionnn9/notecapsuel/issues"
-  },
-  "homepage": "https://github.com/sionnn9/notecapsuel#readme"
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
 }
