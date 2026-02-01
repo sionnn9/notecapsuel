@@ -4,16 +4,16 @@ import cors from "cors";
 
 import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
-import rateLimiter from "./middleware/rateLimiter.js";
+// import rateLimiter from "./middleware/rateLimiter.js";  // ← REMOVE THIS LINE
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// CORS - Allow all origins for now (we'll restrict later once it works)
+// CORS - Allow all origins for now
 app.use(
   cors({
-    origin: "*", // Allow all origins temporarily
+    origin: "*",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
@@ -22,13 +22,7 @@ app.use(
 
 app.use(express.json());
 
-// Skip rate limiter for OPTIONS requests
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return next();
-  }
-  return rateLimiter(req, res, next);
-});
+// ← REMOVE RATE LIMITER MIDDLEWARE COMPLETELY
 
 app.use((req, res, next) => {
   console.log(
