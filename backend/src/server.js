@@ -4,29 +4,45 @@ import cors from "cors";
 
 import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
-// import rateLimiter from "./middleware/rateLimiter.js";  // ← REMOVE THIS LINE
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// CORS - Allow all origins for now
+// Manual CORS headers - MUST be first, before any other middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With",
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  // Handle preflight OPTIONS request immediately
+  if (req.method === "OPTIONS") {
+    console.log(`✅ OPTIONS ${req.url} - Preflight handled`);
+    return res.status(200).end();
+  }
+  next();
+});
+
+// CORS middleware as backup
 app.use(
   cors({
     origin: "*",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   }),
 );
 
 app.use(express.json());
 
-// ← REMOVE RATE LIMITER MIDDLEWARE COMPLETELY
-
 app.use((req, res, next) => {
   console.log(
-    `${req.method} ${req.url} from ${req.headers.origin || "no-origin"}`,
+    `📨 ${req.method} ${req.url} from ${req.headers.origin || "no-origin"}`,
   );
   next();
 });
@@ -39,12 +55,23 @@ app.use("/api/notes", notesRoutes);
 
 // 404 handler
 app.use((req, res) => {
-  console.log(`404: ${req.method} ${req.url}`);
+  console.log(`❌ 404: ${req.method} ${req.url}`);
   res.status(404).json({ error: "Not found" });
 });
 
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+// Error handler
+app.use((err, req, res, next) => {
+  console.error("💥 Error:", err);
+  res.status(500).json({ error: "Internal server error" });
 });
+
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Database connection failed:", err);
+    process.exit(1);
+  });
