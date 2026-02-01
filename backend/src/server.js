@@ -1,50 +1,43 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-
 import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
+import rateLimiter from "./middleware/rateLimiter.js";
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Manual CORS headers - MUST be first, before any other middleware
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Requested-With",
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
+// 1. SPECIFIC CORS CONFIGURATION
+const allowedOrigins = [
+  "https://notecapsuel.vercel.app", // Your Vercel frontend
+  "http://localhost:3000", // Local development
+];
 
-  // Handle preflight OPTIONS request immediately
-  if (req.method === "OPTIONS") {
-    console.log(`✅ OPTIONS ${req.url} - Preflight handled`);
-    return res.status(200).end();
-  }
-  next();
-});
-
-// CORS middleware as backup
 app.use(
   cors({
-    origin: "*",
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   }),
 );
 
 app.use(express.json());
 
+// 2. RATE LIMITER (Handled after CORS)
 app.use((req, res, next) => {
-  console.log(
-    `📨 ${req.method} ${req.url} from ${req.headers.origin || "no-origin"}`,
-  );
-  next();
+  if (req.method === "OPTIONS") return next();
+  return rateLimiter(req, res, next);
 });
 
 app.get("/", (req, res) => {
@@ -53,18 +46,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/notes", notesRoutes);
 
-// 404 handler
-app.use((req, res) => {
-  console.log(`❌ 404: ${req.method} ${req.url}`);
-  res.status(404).json({ error: "Not found" });
-});
-
-// Error handler
-app.use((err, req, res, next) => {
-  console.error("💥 Error:", err);
-  res.status(500).json({ error: "Internal server error" });
-});
-
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
@@ -72,6 +53,6 @@ connectDB()
     });
   })
   .catch((err) => {
-    console.error("❌ Database connection failed:", err);
-    process.exit(1);
+    console.error("❌ DB Connection Error:", err);
+    process.exit(1); // Triggers "Status 1" if DB fails
   });
