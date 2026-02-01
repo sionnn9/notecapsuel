@@ -9,20 +9,21 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// 1. SPECIFIC CORS CONFIGURATION
+// 1. EXACT ORIGINS (Must include https:// and no trailing slashes)
 const allowedOrigins = [
-  "https://notecapsuel.vercel.app", // Your Vercel frontend
-  "http://localhost:3000", // Local development
+  "http://localhost:3000",
+  "https://notecapsuel.vercel.app", // Added https:// - crucial!
 ];
 
+// 2. CORS MUST BE FIRST
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1) {
+      // Allow requests with no origin (like mobile apps/Postman) or matching list
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.log("CORS blocked origin:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -32,27 +33,37 @@ app.use(
   }),
 );
 
+// 3. EXPLICIT OPTIONS HANDLER
+// This answers the browser's "preflight" request immediately before any other logic
+app.options("*", cors());
+
+// 4. OTHER MIDDLEWARE
 app.use(express.json());
 
-// 2. RATE LIMITER (Handled after CORS)
+// 5. SKIP RATE LIMITER FOR OPTIONS
 app.use((req, res, next) => {
   if (req.method === "OPTIONS") return next();
-  return rateLimiter(req, res, next);
+  rateLimiter(req, res, next);
 });
 
-app.get("/", (req, res) => {
-  res.json({ message: "Backend is running!", status: "ok" });
+// Logging
+app.use((req, res, next) => {
+  console.log(`📨 ${req.method} ${req.url} | Origin: ${req.headers.origin}`);
+  next();
 });
 
+// Routes
+app.get("/", (req, res) => res.json({ message: "Backend is live!" }));
 app.use("/api/notes", notesRoutes);
 
+// Connect and Start
 connectDB()
   .then(() => {
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`✅ Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.error("❌ DB Connection Error:", err);
-    process.exit(1); // Triggers "Status 1" if DB fails
+    console.error("❌ DB connection failed:", err);
+    process.exit(1);
   });
