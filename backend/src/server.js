@@ -12,10 +12,7 @@ const PORT = process.env.PORT || 5001;
 
 //middleware
 // this should be before app.use(express.json()) to handle preflight requests because of CORS
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://notecapsuel.vercel.app",
-];
+const allowedOrigins = ["http://localhost:3000", process.env.FRONTEND_URL];
 
 app.use(
   cors({
