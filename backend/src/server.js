@@ -10,28 +10,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// ✅ FIXED CORS CONFIG (IMPORTANT PART)
+//middleware
+// this should be before app.use(express.json()) to handle preflight requests because of CORS
+const allowedOrigins = ["*"];
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (Postman, mobile apps, etc.)
-      if (!origin) return callback(null, true);
-
-      if (
-        origin === "http://localhost:3000" ||
-        origin.startsWith("https://notecapsuel.vercel.app")
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
-
-// Handle preflight requests properly
-app.options("*", cors());
 
 app.use(express.json());
 app.use(rateLimiter);
