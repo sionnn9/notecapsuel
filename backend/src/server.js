@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5001;
 
 //middleware
 // this should be before app.use(express.json()) to handle preflight requests because of CORS
-const allowedOrigins = ["http://localhost:3000", process.env.FRONTEND_URL];
+const allowedOrigins = ["http://localhost:3000", process.env.FRONTEND_URL]; //idk why but u have to put the vercel link in env as frontend url cant put directly cc:machado for helping
 
 app.use(
   cors({
