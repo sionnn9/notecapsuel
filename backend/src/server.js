@@ -9,62 +9,30 @@ import rateLimiter from "./middleware/rateLimiter.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
+app.use(cors());
+//middleware
+// this should be before app.use(express.json()) to handle preflight requests because of CORS
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://notecapsuel.vercel.app",
+];
 
-// Manual CORS headers FIRST - before any middleware
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Requested-With",
-  );
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-
-  // Handle preflight
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-  next();
-});
-
-// CORS middleware
 app.use(
   cors({
-    origin: "*",
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
 
 app.use(express.json());
-
-// Skip rate limiter for OPTIONS
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return next();
-  }
-  return rateLimiter(req, res, next);
-});
+app.use(rateLimiter);
 
 app.use((req, res, next) => {
-  console.log(
-    `${req.method} ${req.url} from ${req.headers.origin || "no-origin"}`,
-  );
+  console.log(`req method is ${req.method} and req url is ${req.url}`);
   next();
 });
 
-app.get("/", (req, res) => {
-  res.json({ message: "Backend is running!", status: "ok" });
-});
-
 app.use("/api/notes", notesRoutes);
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: "Not found" });
-});
 
 connectDB().then(() => {
   app.listen(PORT, () => {
