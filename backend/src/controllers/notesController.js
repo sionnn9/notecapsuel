@@ -2,7 +2,8 @@ import Note from "../models/Note.js";
 
 export async function getAllNotes(req, res) {
   try {
-    const notes = await Note.find().sort({ createdAt: -1 }); //fetch all notes from database
+    const notes = await Note.find({ user: req.user.id }); //get only the notes of logged in user
+
     res.status(200).json(notes);
   } catch (error) {
     console.error("error in getAllNotes", error);
@@ -12,7 +13,10 @@ export async function getAllNotes(req, res) {
 
 export async function getNoteById(req, res) {
   try {
-    const note = await Note.findById(req.params.id); //fetch specific note from database
+    const note = await Note.findOne({
+      _id: req.params.id,
+      user: req.user.id, // ensures note belongs to logged-in user
+    });
     if (!note) {
       return res.status(404).json({ Message: "note not found" });
     }
@@ -26,8 +30,12 @@ export async function getNoteById(req, res) {
 export async function createNote(req, res) {
   try {
     const { title, content } = req.body;
-    const newNote = new Note({ title, content });
-    await newNote.save(); //save to database
+    const note = new Note({
+      user: req.user.id,
+      title,
+      content,
+    });
+    await note.save(); //save to database
     res.status(201).json({ Message: "note created successfully" });
   } catch (error) {
     console.error("error in createNote", error);
