@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const noteSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // linking to User model
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -11,9 +16,8 @@ const noteSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Note = mongoose.model("Note", noteSchema);
-
 export default Note;
