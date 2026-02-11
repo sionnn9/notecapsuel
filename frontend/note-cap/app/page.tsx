@@ -22,8 +22,26 @@ const Page = () => {
           </p>
 
           {/* CTA */}
-          <div className="mt-10 flex justify-center">
-            <Link href="/note">
+          <div className="mt-10 flex justify-center flex-wrap gap-6">
+            <Link href="/signup">
+              <button
+                className="
+                
+                  group flex items-center gap-3
+                  bg-blue-600 hover:bg-blue-500
+                  px-10 py-4 rounded-2xl
+                  font-bold text-lg
+                  transition-all
+                  hover:-translate-y-1
+                  active:scale-95
+                  shadow-[0_0_30px_rgba(37,99,235,0.45)]
+                "
+              >
+                Sign Up for Free
+                <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </Link>
+            <Link href="/login">
               <button
                 className="
                   group flex items-center gap-3
@@ -36,7 +54,7 @@ const Page = () => {
                   shadow-[0_0_30px_rgba(37,99,235,0.45)]
                 "
               >
-                Start Using App
+                Log In to Your Account
                 <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
