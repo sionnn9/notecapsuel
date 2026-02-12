@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import notesRoutes from "./routes/notesRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import { connectDB } from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
 
@@ -22,7 +23,7 @@ app.use(
 );
 
 app.use(express.json());
-``;
+
 app.use(rateLimiter);
 
 app.use((req, res, next) => {
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/notes", notesRoutes);
+
 app.use("/api/auth", authRoutes);
 
 connectDB().then(() => {
