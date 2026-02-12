@@ -1,12 +1,26 @@
 "use client";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-
+import instance from "@/app/lib/axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast/headless";
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await instance.post("/auth/register", { name, email, password });
+      toast.success("Account created successfully! Please log in.");
+    } catch (error) {
+      toast.error("Failed to create account. Please try again.");
+      console.error("Signup error:", error);
+    }
+  };
   return (
     <div className="relative min-h-screen text-white overflow-hidden">
       <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
@@ -19,12 +33,14 @@ const SignupPage = () => {
 
           <div className="space-y-4">
             <input
+              onChange={(e) => setName(e.target.value)}
               type="text"
               placeholder="Full Name"
               className="w-full p-3 rounded-xl bg-white/10 border border-white/10 outline-none"
             />
 
             <input
+              onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="Email"
               className="w-full p-3 rounded-xl bg-white/10 border border-white/10 outline-none"
@@ -32,6 +48,7 @@ const SignupPage = () => {
 
             <div className="relative">
               <input
+                onChange={(e) => setPassword(e.target.value)}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 className="w-full p-3 rounded-xl bg-white/10 border border-white/10 outline-none pr-12"
@@ -49,7 +66,10 @@ const SignupPage = () => {
               </button>
             </div>
 
-            <button className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition-all">
+            <button
+              className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition-all"
+              onClick={handleSubmit}
+            >
               Sign Up
             </button>
           </div>
