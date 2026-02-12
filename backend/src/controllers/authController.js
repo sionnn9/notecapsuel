@@ -7,7 +7,6 @@ export async function register(req, res) {
     if (!newUser) {
       return res.status(400).json({ Message: "alr exists" });
     }
-    res.status(201).json({ Message: "user created successfully" });
   } catch (error) {
     console.error("error in register", error);
     res.status(500).json({ Message: "server error" });
