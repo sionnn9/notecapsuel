@@ -22,6 +22,7 @@ app.use(
 );
 
 app.use(express.json());
+``;
 app.use(rateLimiter);
 
 app.use((req, res, next) => {
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/notes", notesRoutes);
+app.use("/api/auth", authRoutes);
 
 connectDB().then(() => {
   app.listen(PORT, () => {
