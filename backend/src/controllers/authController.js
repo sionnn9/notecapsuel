@@ -4,7 +4,10 @@ export async function register(req, res) {
   try {
     const { name, email, password } = req.body;
 
-    // check if user exists
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
     const existingUser = await user.findOne({ email });
 
     if (existingUser) {
@@ -14,7 +17,7 @@ export async function register(req, res) {
     const newUser = await user.create({
       name,
       email,
-      password, // (hash this if using bcrypt)
+      password,
     });
 
     return res.status(201).json({
@@ -29,8 +32,9 @@ export async function register(req, res) {
     }
 
     console.error("REGISTER ERROR:", error);
+
     return res.status(500).json({
-      message: error.message,
+      message: "Server error",
     });
   }
 }
