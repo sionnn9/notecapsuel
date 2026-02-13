@@ -25,7 +25,7 @@ export async function register(req, res) {
       userId: newUser._id,
     });
   } catch (error) {
-    console.error("REGISTER ERROR:", error);
+    console.log(error.response.data);
 
     if (error.code === 11000) {
       return res.status(400).json({
