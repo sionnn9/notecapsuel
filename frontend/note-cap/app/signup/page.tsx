@@ -16,9 +16,12 @@ const SignupPage = () => {
     try {
       await instance.post("/auth/register", { name, email, password });
       toast.success("Account created successfully! Please log in.");
-    } catch (error) {
-      toast.error("Failed to create account. Please try again.");
-      console.error("Signup error:", error);
+      console.log("Account created successfully");
+    } catch (error: any) {
+      console.log("Full error:", error);
+      console.log("Server response:", error.response?.data);
+
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
