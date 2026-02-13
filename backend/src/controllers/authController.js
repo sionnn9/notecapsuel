@@ -22,6 +22,12 @@ export async function register(req, res) {
       userId: newUser._id,
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: "Email already registered",
+      });
+    }
+
     console.error("REGISTER ERROR:", error);
     return res.status(500).json({
       message: error.message,
