@@ -3,30 +3,30 @@ import user from "../models/user.js";
 export async function register(req, res) {
   try {
     const { name, email, password } = req.body;
-
+    // Basic validation all fields are required
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields required" });
     }
-
+    // Check if user already exists
     const existingUser = await user.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-
+    // Create new user
     const newUser = await user.create({
       name,
       email,
       password,
     });
-
+    // Return success response
     return res.status(201).json({
       message: "User created successfully",
       userId: newUser._id,
     });
   } catch (error) {
     console.error("REGISTER ERROR:", error);
-
+    // Handle duplicate key error (email already exists)
     if (error.code === 11000) {
       return res.status(400).json({
         message: "Email already registered",
@@ -41,6 +41,10 @@ export async function register(req, res) {
 
 export async function login(req, res) {
   try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password required" });
+    }
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Server error during login" });
