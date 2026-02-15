@@ -21,6 +21,7 @@ export async function register(req, res) {
       email,
       password: hashedPassword,
     });
+    console.log("New user created:", newUser);
     // Return success response
     return res.status(201).json({
       message: "User created successfully",
