@@ -3,9 +3,22 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import instance from "../lib/axios";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await instance.post("/auth/login", { email, password });
+      console.log("Login response:", response.data);
+    } catch (error: any) {
+      console.log("Full error:", error);
+      console.log("Server response:", error.response?.data);
+    }
+  };
 
   return (
     <div className="relative min-h-screen text-white overflow-hidden">
@@ -20,6 +33,8 @@ const LoginPage = () => {
               type="email"
               placeholder="Email"
               className="w-full p-3 rounded-xl bg-white/10 border border-white/10 outline-none"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
 
             <div className="relative">
@@ -27,6 +42,8 @@ const LoginPage = () => {
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 className="w-full p-3 rounded-xl bg-white/10 border border-white/10 outline-none pr-12"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <button
                 type="button"
