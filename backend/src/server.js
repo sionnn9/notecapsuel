@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import { connectDB } from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
 import cookieParser from "cookie-parser";
+import authMiddleware from "./middleware/authMiddleware.js";
 
 dotenv.config();
 const app = express();
@@ -26,6 +27,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(rateLimiter);
+app.use(authMiddleware); // Apply auth middleware globally to protect all routes, can be moved to specific routes if needed
 
 app.use((req, res, next) => {
   console.log(`req method is ${req.method} and req url is ${req.url}`);
