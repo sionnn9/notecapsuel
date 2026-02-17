@@ -33,6 +33,14 @@ const Page = () => {
         setNotes(res.data);
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
+          if (error.response?.status === 401) {
+            toast.error("Unauthorized. Please log in.");
+            router.push("/login");
+            return;
+          }
+        }
+
+        if (axios.isAxiosError(error)) {
           if (error.response?.status === 429) {
             setIsRateLimited(true);
             router.push("/component/ratelimit");

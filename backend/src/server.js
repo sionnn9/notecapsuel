@@ -6,6 +6,7 @@ import notesRoutes from "./routes/notesRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import { connectDB } from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -23,7 +24,7 @@ app.use(
 );
 
 app.use(express.json());
-
+app.use(cookieParser());
 app.use(rateLimiter);
 
 app.use((req, res, next) => {
