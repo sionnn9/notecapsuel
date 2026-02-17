@@ -4,19 +4,28 @@ import React, { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import instance from "../lib/axios";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await instance.post("/auth/login", { email, password });
       console.log("Login response:", response.data);
+      toast.success("Logged in successfully!");
+      // Redirect to notes page after a short delay to allow the toast to show
+      const timer = setTimeout(() => {
+        window.location.href = "/note";
+      }, 1000);
+      return () => clearTimeout(timer);
     } catch (error: any) {
       console.log("Full error:", error);
       console.log("Server response:", error.response?.data);
+      toast.error("Login failed. Please check your credentials.");
     }
   };
 
@@ -58,7 +67,10 @@ const LoginPage = () => {
               </button>
             </div>
 
-            <button className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition-all">
+            <button
+              onClick={handleSubmit}
+              className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition-all"
+            >
               Login
             </button>
           </div>
