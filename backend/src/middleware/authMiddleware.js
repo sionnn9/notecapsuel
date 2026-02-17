@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export const authMiddleware = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
   try {
     const token = req.cookies.token; // Assuming the token is stored in a cookie named 'token'
     if (!token) {
@@ -13,3 +13,5 @@ export const authMiddleware = (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized invalid token" });
   }
 };
+
+export default authMiddleware;
