@@ -31,7 +31,7 @@ export async function createNote(req, res) {
   try {
     const { title, content } = req.body;
     const note = new Note({
-      user: req.user.id,
+      user: req.user.userId,
       title,
       content,
     });
@@ -48,7 +48,7 @@ export async function updateNote(req, res) {
     const { title, content } = req.body;
 
     const updatedNote = await Note.findOneAndUpdate(
-      { _id: req.params.id, user: req.user.id }, // 🔐 IMPORTANT
+      { _id: req.params.id, user: req.user.userId }, // 🔐 IMPORTANT
       { title, content },
       { new: true },
     );
@@ -72,7 +72,7 @@ export async function deleteNote(req, res) {
   try {
     const deletedNote = await Note.findOneAndDelete({
       _id: req.params.id,
-      user: req.user.id, // 🔐 IMPORTANT
+      user: req.user.userId, // 🔐 IMPORTANT
     });
 
     if (!deletedNote) {
