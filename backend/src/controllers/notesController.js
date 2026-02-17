@@ -2,7 +2,7 @@ import Note from "../models/Note.js";
 
 export async function getAllNotes(req, res) {
   try {
-    const notes = await Note.find({ user: req.user.userId }); //get only the notes of logged in user
+    const notes = await Note.find({ user: req.user.userId }); // ensures only notes belonging to logged-in user are fetched
 
     res.status(200).json(notes);
   } catch (error) {
