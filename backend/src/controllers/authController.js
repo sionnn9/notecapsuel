@@ -77,6 +77,8 @@ export async function login(req, res) {
         .status(400)
         .json({ message: "Invalid credentials wrong password" });
     }
+    console.log("ENV CHECK:", process.env.JWT_SECRET);
+
     // If credentials are valid, create a JWT token
     const token = jwt.sign(
       { userId: existingUser._id, email: existingUser.email },
