@@ -56,7 +56,7 @@ NoteCapsuel prioritizes data integrity through a multi-layered security approach
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/notecapsuel.git
+git clone https://github.com/sionnn9/notecapsuel.git
 
 # Install Backend Dependencies
 cd server && npm install
@@ -83,7 +83,7 @@ CLIENT_URL=http://localhost:3000
 
 ## 👨‍💻 Author
 
-**Your Name**
+**Sion Aaron Lobo**
 
 * GitHub: [@sionnn9](https://github.com/sionnn9)
 * LinkedIn: [Sion Lobo](https://www.linkedin.com/in/sionlobo/)
