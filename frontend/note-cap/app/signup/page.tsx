@@ -10,18 +10,25 @@ const SignupPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await instance.post("/auth/register", { name, email, password });
       toast.success("Account created successfully! Please log in.");
       console.log("Account created successfully");
+      const timer = setTimeout(() => {
+        window.location.href = "/login";
+      }, 1500);
+      return () => clearTimeout(timer);
     } catch (error: any) {
       console.log("Full error:", error);
       console.log("Server response:", error.response?.data);
 
       toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,10 +78,25 @@ const SignupPage = () => {
             </div>
 
             <button
-              className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition-all"
+              type="submit"
               onClick={handleSubmit}
+              disabled={loading}
+              className={`w-full py-3 rounded-xl font-bold transition-all duration-200
+    ${
+      loading
+        ? "bg-blue-400 cursor-not-allowed"
+        : "bg-blue-600 hover:bg-blue-500 active:scale-[0.98]"
+    }
+  `}
             >
-              Sign Up
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  Signing Up...
+                </span>
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </div>
 

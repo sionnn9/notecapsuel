@@ -10,9 +10,10 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await instance.post("/auth/login", { email, password });
       console.log("Login response:", response.data);
@@ -26,6 +27,8 @@ const LoginPage = () => {
       console.log("Full error:", error);
       console.log("Server response:", error.response?.data);
       toast.error("Login failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,10 +71,25 @@ const LoginPage = () => {
             </div>
 
             <button
+              type="submit"
               onClick={handleSubmit}
-              className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition-all"
+              disabled={loading}
+              className={`w-full py-3 rounded-xl font-bold transition-all duration-200
+    ${
+      loading
+        ? "bg-blue-400 cursor-not-allowed"
+        : "bg-blue-600 hover:bg-blue-500 active:scale-[0.98]"
+    }
+  `}
             >
-              Login
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  logging in...
+                </span>
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
 
