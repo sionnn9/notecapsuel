@@ -45,23 +45,6 @@ NoteCapsuel prioritizes data integrity through a multi-layered security approach
 
 ---
 
-## 📂 Project Structure
-
-```text
-notecapsuel/
-├── client/          # Next.js frontend with Tailwind configuration
-│   ├── src/app      # App router logic
-│   └── src/components
-├── server/          # Express.js backend
-│   ├── middleware/  # Auth & error handling
-│   ├── models/      # Mongoose schemas (User, Note)
-│   └── routes/      # API endpoints
-└── README.md
-
-```
-
----
-
 ## ⚙️ Local Development
 
 ### 1. Prerequisites
